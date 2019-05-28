@@ -42,7 +42,6 @@ class ethercapCrawlMethod(baseCrawlMethod.crawlMethod):
             rulesObj.append({'name': 'author', 'rule': ['p', {'class': ['auth-info']}, 0]})
         if 'content' in userParamObj["info"]["requiredContent"]:
             rulesObj.append({'name': 'content', 'rule': ['div', {'class': ['article-content']}, 0]})
-        print rulesObj
         return rulesObj
 
     @staticmethod
@@ -54,5 +53,4 @@ class ethercapCrawlMethod(baseCrawlMethod.crawlMethod):
             rulesObj.append({'name': 'author', 'rule': "<p class=\"auth-info\">(.+?)</p>"})
         if 'content' in userParamObj["info"]["requiredContent"]:
             rulesObj.append("")
-        print rulesObj
         return rulesObj
