@@ -1,4 +1,4 @@
-import baseCrawlMethod
+from crawlMethods import baseCrawlMethod
 
 
 class ethercapCrawlMethod(baseCrawlMethod.crawlMethod):

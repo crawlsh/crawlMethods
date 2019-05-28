@@ -3,7 +3,7 @@ import argparse
 import copy
 
 tmpl = """# -*- coding:utf-8 -*-
-import baseCrawlMethod
+from crawlMethods import baseCrawlMethod
 
 
 class CSH@$NAME$@CrawlMethod(baseCrawlMethod.crawlMethod):
