@@ -1,4 +1,4 @@
-availableModules = ["ethercap"]
+availableModules = ["ethercap", "kr"]
 crawlMethodsInfo = {}
 crawlMethodsInfoHTML = ""
 
