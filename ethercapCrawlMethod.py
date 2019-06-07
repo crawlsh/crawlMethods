@@ -7,7 +7,7 @@ class ethercapCrawlMethod(baseCrawlMethod.crawlMethod):
     EXAMPLE_URL = "https://www.ethercap.com/cases/view?id=302"
     IS_VIP_REQUIRED = False
     MAXIMUM = 200
-    USING_SOUP = False
+    USING_SOUP = True
     REQUIREMENT = {
         "info": {
             "labels": ["title", "author", "content"],
@@ -42,15 +42,4 @@ class ethercapCrawlMethod(baseCrawlMethod.crawlMethod):
             rulesObj.append({'name': 'author', 'rule': ['p', {'class': ['auth-info']}, 0]})
         if 'content' in userParamObj["info"]["requiredContent"]:
             rulesObj.append({'name': 'content', 'rule': ['div', {'class': ['article-content']}, 0]})
-        return rulesObj
-
-    @staticmethod
-    def generateRegexRules(userParamObj):
-        rulesObj = []
-        if 'title' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'title', 'rule': "<h1>(.+?)</h1>"})
-        if 'author' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'author', 'rule': "<p class=\"auth-info\">(.+?)</p>"})
-        if 'content' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append("")
         return rulesObj
