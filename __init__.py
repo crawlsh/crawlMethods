@@ -1,4 +1,5 @@
-availableModules = ["ethercap", "kr"]
+availableModules = ["ethercap", "kr",
+                    "ctt", "cyzone", "geekpark", "jpm", "newseed", "trjcn"]
 crawlMethodsInfo = {}
 crawlMethodsInfoHTML = ""
 
