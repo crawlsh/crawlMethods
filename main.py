@@ -10,7 +10,7 @@ class CSH@$NAME$@CrawlMethod(baseCrawlMethod.crawlMethod):
     NAME = "CSH@$NAME$@"
     DESCRIPTION = "CSH@$DESC$@"
     EXAMPLE_URL = "CSH@$EXAMPLE$@"
-    USING_SOUP = int("CSH@$SOUPUSAGE$@")
+    USING = "CSH@$USAGE$@"
     REQUIREMENT = {
         "info": {
             "labels": [],  # Implement here!
@@ -48,7 +48,7 @@ class CSH@$NAME$@CrawlMethod(baseCrawlMethod.crawlMethod):
     \"""
 
     @staticmethod
-    def generateCSH@$USING_SOUP_STRING$@Rules(userParamObj):
+    def generateRules(userParamObj):
         \"""
         Implement here!
         \"""
@@ -80,9 +80,7 @@ def generateModule(args):
     content = content.replace("CSH@$EXAMPLE$@", EXAMPLE_URL)
     USING_SOUP = int(args.rule == "s")
     USING_SOUP_STRING = "Soup" if USING_SOUP else "Regex"
-    content = content.replace("CSH@$SOUPUSAGE$@", str(USING_SOUP))
-    content = content.replace("def generateCSH@$USING_SOUP_STRING$@Rules",
-                              "def generate%sRules" % USING_SOUP_STRING)
+    content = content.replace("CSH@$USAGE$@", USING_SOUP_STRING)
     fileName = '%sCrawlMethod.py' % NAME
     newFile = open(fileName, 'w')
     newFile.write(content)

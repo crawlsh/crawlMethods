@@ -8,7 +8,7 @@ class pedailyCrawlMethod(baseCrawlMethod.crawlMethod):
     NAME = "pedaily"
     DESCRIPTION = "爬取投资界网"
     EXAMPLE_URL = "https://m.pedaily.cn/news/444086"
-    USING_SOUP = int("1")
+    USING = "Soup"
     REQUIREMENT = {
         "info": {
             "labels": ['author', 'time', 'title', 'summary', 'article', 'tag'],  # Implement here!
@@ -56,14 +56,14 @@ class pedailyCrawlMethod(baseCrawlMethod.crawlMethod):
     """
 
     @staticmethod
-    def generateSoupRules(userParamObj):
+    def generateRules(userParamObj):
         rulesObj = []
 
         if 'author' in userParamObj["info"]["requiredContent"]:
             rulesObj.append({'name': 'author', 'rule': ['span', {'class': 'author'}, 0]})
 
         if 'time' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'tag', 'rule': ['span', {'class': 'date'}, 0]})
+            rulesObj.append({'name': 'time', 'rule': ['span', {'class': 'date'}, 0]})
 
         if 'title' in userParamObj["info"]["requiredContent"]:
             rulesObj.append({'name': 'title', 'rule': ['h1', {}, 0]})

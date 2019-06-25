@@ -6,7 +6,7 @@ class geekparkCrawlMethod(baseCrawlMethod.crawlMethod):
     NAME = "geekpark"
     DESCRIPTION = "爬取极客公园"
     EXAMPLE_URL = "http://www.geekpark.net/news/243272"
-    USING_SOUP = int("1")
+    USING = "Soup"
     REQUIREMENT = {
         "info": {
             "labels": ['author', 'tag', 'title',
@@ -55,7 +55,7 @@ class geekparkCrawlMethod(baseCrawlMethod.crawlMethod):
     """
 
     @staticmethod
-    def generateSoupRules(userParamObj):
+    def generateRules(userParamObj):
         rulesObj = []
 
         if 'author' in userParamObj["info"]["requiredContent"]:

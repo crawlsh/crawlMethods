@@ -9,7 +9,7 @@ class dzzqCrawlMethod(baseCrawlMethod.crawlMethod):
     DESCRIPTION = "爬取大众证券"
     EXAMPLE_URL = "http://www.dzzq.com.cn/finance/41337611.html"
     GET_LINK_REGEX = re.compile("<a href=\"/finance/(.+?).html\">")
-    USING_SOUP = int("1")
+    USING = "Soup"
     REQUIREMENT = {
         "info": {
             "labels": ['title', 'article'],  # Implement here!
@@ -39,13 +39,11 @@ class dzzqCrawlMethod(baseCrawlMethod.crawlMethod):
         result = []
         for i in range(1, 1 + needPages):
             APIURL = "http://www.dzzq.com.cn/list_111_%s.html" % i
-            html = crawlUtils.crawlWorker(APIURL, "Anon", 0)['raw'] \
-                .replace("<html><body><p>", "") \
-                .replace("</p></body></html>", "")
+            html = crawlUtils.crawlWorker(APIURL, "Anon", 0)['raw']
             links = dzzqCrawlMethod.GET_LINK_REGEX.findall(html)
-            for i in links:
-                if "list" not in i and i[0] != "S":
-                    result.append("http://www.dzzq.com.cn/finance/%s.html" % i)
+            for j in links:
+                if "list" not in j and j[0] != "S":
+                    result.append("http://www.dzzq.com.cn/finance/%s.html" % j)
         return result
 
     @staticmethod
@@ -64,7 +62,7 @@ class dzzqCrawlMethod(baseCrawlMethod.crawlMethod):
     """
 
     @staticmethod
-    def generateSoupRules(userParamObj):
+    def generateRules(userParamObj):
         rulesObj = []
 
         if 'title' in userParamObj["info"]["requiredContent"]:

@@ -1,5 +1,7 @@
 availableModules = ["ethercap", "kr",
-                    "ctt", "cyzone", "geekpark", "jpm", "newseed", "trjcn"]
+                    "ctt", "cyzone", "geekpark", "jpm", "newseed", "trjcn",
+                    "chinaipo", "chinatimes", "ctsbw", "dzzq", "eeo", "ikc", "laohu", "nifa",
+                    "pedaily", "pedata", "tmt", "weiyang", "zqzx", "ztw"]
 crawlMethodsInfo = {}
 crawlMethodsInfoHTML = ""
 

@@ -8,7 +8,7 @@ class weiyangCrawlMethod(baseCrawlMethod.crawlMethod):
     NAME = "weiyang"
     DESCRIPTION = "爬取未央网"
     EXAMPLE_URL = "https://www.weiyangx.com/332784.html"
-    USING_SOUP = int("1")
+    USING = "Soup"
     REQUIREMENT = {
         "info": {
             "labels": ['author', 'time', 'title', 'tag', 'article'],  # Implement here!
@@ -56,7 +56,7 @@ class weiyangCrawlMethod(baseCrawlMethod.crawlMethod):
     """
 
     @staticmethod
-    def generateSoupRules(userParamObj):
+    def generateRules(userParamObj):
         rulesObj = []
 
         if 'author' in userParamObj["info"]["requiredContent"]:

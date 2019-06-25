@@ -1,16 +1,17 @@
 # -*- coding:utf-8 -*-
 from crawlMethods import baseCrawlMethod
+from utils import crawlUtils
+import re
 
 
-class cttCrawlMethod(baseCrawlMethod.crawlMethod):
-    NAME = "ctt"
-    DESCRIPTION = "爬取创头条"
-    EXAMPLE_URL = "http://www.ctoutiao.com/1937934.html"
+class ctsbwCrawlMethod(baseCrawlMethod.crawlMethod):
+    NAME = "ctsbw"
+    DESCRIPTION = "爬取创投时报网"
+    EXAMPLE_URL = "http://www.ctsbw.com/article/14415.html"
     USING = "Soup"
     REQUIREMENT = {
         "info": {
-            "labels": ['author', 'tag', 'title', 'summary',
-                       'article'],  # Implement here!
+            "labels": ['author', 'title', 'summary', 'article', 'tag'],  # Implement here!
             "isCrawlByIDAvailable": True,  # Implement here!
             "isCrawlByTimeAvailable": True,  # Implement here!
             "isCrawlByOrderAvailable": True,  # Implement here!
@@ -30,11 +31,11 @@ class cttCrawlMethod(baseCrawlMethod.crawlMethod):
 
     @staticmethod
     def generateLinks(userParamObj):
-        urlTemplate = "http://www.cyzone.cn/article/%s.html"
+        urlTemplate = "http://www.ctsbw.com/article/%s.html"
         if userParamObj["crawlBy"] == "ORDER":
             result = [
                 urlTemplate % i
-                for i in range(196568 - int(userParamObj["info"]["amount"]), 196568)
+                for i in range(14476 - int(userParamObj["info"]["amount"]), 14476)
             ]
             return result
         if userParamObj["crawlBy"] == "ID":
@@ -59,19 +60,19 @@ class cttCrawlMethod(baseCrawlMethod.crawlMethod):
         rulesObj = []
 
         if 'author' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'author', 'rule': ['p', {'class': 'A_pon1'}, 0]})
-
-        if 'tag' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'tag', 'rule': ['div', {'class': 'A_linebn'}, 0]})
+            rulesObj.append({'name': 'author', 'rule': ['p', {'class': 's14'}, 0]})
 
         if 'title' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'title', 'rule': ['h1', {}, 0]})
+            rulesObj.append({'name': 'title', 'rule': ['h2', {'class': 's28'}, 0]})
 
         if 'summary' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'summary', 'rule': ['div', {'class': 'A_zys'}, 0]})
+            rulesObj.append({'name': 'summary', 'rule': ['div', {'class': 'cj_laiyuan'}, 0]})
 
         if 'article' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'article', 'rule': ['div', {'class': 'A_contxt'}, 0]})
+            rulesObj.append({'name': 'article', 'rule': ['div', {'class': 'col-xs-12'}, 1]})
+
+        if 'tag' in userParamObj["info"]["requiredContent"]:
+            rulesObj.append({'name': 'tag', 'rule': ['b', {'class': 'col-xs-5'}, 0]})
 
         return rulesObj
 

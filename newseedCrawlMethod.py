@@ -6,7 +6,7 @@ class newseedCrawlMethod(baseCrawlMethod.crawlMethod):
     NAME = "newseed"
     DESCRIPTION = "Crawl Content of NewSeed"
     EXAMPLE_URL = "https://news.newseed.cn/p/1354890"
-    USING_SOUP = int("1")
+    USING = "Soup"
     REQUIREMENT = {
         "info": {
             "labels": ['author', 'title', 'summary',
@@ -54,7 +54,7 @@ class newseedCrawlMethod(baseCrawlMethod.crawlMethod):
     """
 
     @staticmethod
-    def generateSoupRules(userParamObj):
+    def generateRules(userParamObj):
         rulesObj = []
 
         if 'author' in userParamObj["info"]["requiredContent"]:

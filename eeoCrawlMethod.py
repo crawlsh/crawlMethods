@@ -8,7 +8,7 @@ class eeoCrawlMethod(baseCrawlMethod.crawlMethod):
     NAME = "eeo"
     DESCRIPTION = "爬取经济观察网"
     EXAMPLE_URL = "http://www.eeo.com.cn/2019/0617/358786.shtml"
-    USING_SOUP = int("1")
+    USING = "Soup"
     REQUIREMENT = {
         "info": {
             "labels": ['author', 'title', 'article'],  # Implement here!
@@ -42,12 +42,7 @@ class eeoCrawlMethod(baseCrawlMethod.crawlMethod):
                 APIURL = "http://app.eeo.com.cn/?app=wxmember&controller=index&action=getMoreArticle&catid=3572" \
                          "&allcid=358818,358815,358809,358808,358799,358795,358777,358775,358767,358763,358761,358740," \
                          "358732,358730,358718,358712&page=%s" % i
-                html = crawlUtils.crawlWorker(APIURL, "Anon", 0)['raw'] \
-                    .replace("<html><body><p>", "") \
-                    .replace("</p></body></html>", "")\
-                    .replace("(", "")\
-                    .replace(");", "")
-                jsonData = json.loads(html)
+                jsonData = crawlUtils.requestJsonWithProxy(APIURL, needCut=True)
                 links = [x["url"] for x in jsonData["article"]]
                 result += links
             except:
@@ -70,7 +65,7 @@ class eeoCrawlMethod(baseCrawlMethod.crawlMethod):
     """
 
     @staticmethod
-    def generateSoupRules(userParamObj):
+    def generateRules(userParamObj):
         rulesObj = []
 
         if 'author' in userParamObj["info"]["requiredContent"]:

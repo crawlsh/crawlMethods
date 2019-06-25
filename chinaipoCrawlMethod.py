@@ -1,23 +1,23 @@
 # -*- coding:utf-8 -*-
 from crawlMethods import baseCrawlMethod
 from utils import crawlUtils
-import re
+import json
 
 
-class zqzxCrawlMethod(baseCrawlMethod.crawlMethod):
-    NAME = "zqzx"
-    DESCRIPTION = "爬取证券之星"
-    EXAMPLE_URL = "https://finance.stockstar.com/JC2019061900000004.shtml"
-    GET_LINK_REGEX = re.compile("<a href=\"https://finance.stockstar.com/(.+?).shtml\">")
+class chinaipoCrawlMethod(baseCrawlMethod.crawlMethod):
+    NAME = "chinaipo"
+    DESCRIPTION = "爬取China IPO"
+    EXAMPLE_URL = "http://m.chinaipo.com/vc/83640.html"
     USING = "Soup"
     REQUIREMENT = {
         "info": {
-            "labels": ['author', 'time', 'title', 'article'],  # Implement here!
+            "labels": ['author', 'title', 'article'],  # Implement here!
             "isCrawlByIDAvailable": True,  # Implement here!
             "isCrawlByTimeAvailable": True,  # Implement here!
             "isCrawlByOrderAvailable": True,  # Implement here!
         }
     }
+
     """
     This function should generate all links user want to crawl
     
@@ -33,25 +33,25 @@ class zqzxCrawlMethod(baseCrawlMethod.crawlMethod):
     @staticmethod
     def requestAPIForURL(amount):
         amount = float(amount)
-        i = amount / 60
-        j = amount // 60
+        i = amount / 10
+        j = amount // 10
         needPages = int(i) if i == j else int(i) + 1
         result = []
-        for i in range(2, 2 + needPages):
-            APIURL = "http://www.stockstar.com/roll/finance_%s.shtml" % i
-            html = crawlUtils.crawlWorker(APIURL, "Anon", 0)['raw'] \
-                .replace("<html><body><p>", "") \
-                .replace("</p></body></html>", "")
-            links = zqzxCrawlMethod.GET_LINK_REGEX.findall(html)
-            for i in links:
-                if "list" not in i and i[0] != "S":
-                    result.append("https://finance.stockstar.com/%s.shtml" % i)
+        for i in range(1, 1 + needPages):
+            try:
+                APIURL = "http://api.chinaipo.com/zh-hans/api/articles/?page=%s" % i
+                jsonData = crawlUtils.requestJsonWithProxy(APIURL)
+                for j in jsonData["results"]:
+                    originalId = j["originalId"]
+                    result.append("http://api.chinaipo.com/zh-hans/api/article/?originalId=%s" % originalId)
+            except:
+                pass
         return result
 
     @staticmethod
     def generateLinks(userParamObj):
         if userParamObj["crawlBy"] == "ORDER":
-            return zqzxCrawlMethod.requestAPIForURL(int(userParamObj["info"]["amount"]))
+            return chinaipoCrawlMethod.requestAPIForURL(int(userParamObj["info"]["amount"]))
         return
 
     """
@@ -68,16 +68,25 @@ class zqzxCrawlMethod(baseCrawlMethod.crawlMethod):
         rulesObj = []
 
         if 'author' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'author', 'rule': ['span', {'class': 'source_baidu'}, 0]})
+            rulesObj.append({'name': 'author', 'rule': "source"})
 
-        if 'time' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'tag', 'rule': ['span', {'class': 'pubtime_baidu'}, 0]})
+        if 'tag' in userParamObj["info"]["requiredContent"]:
+            rulesObj.append({'name': 'tag', 'rule': "tags"})
 
         if 'title' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'title', 'rule': ['h1', {}, 0]})
+            rulesObj.append({'name': 'title', 'rule': ['h1', {'class': 'article-tit'}, 0]})
 
         if 'article' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'article', 'rule': ['div', {'class': 'article'}, 0]})
+            rulesObj.append({'name': 'article', 'rule': ['div', {'class': 'article-content'}, 0]})
+
+        if 'time' in userParamObj["info"]["requiredContent"]:
+            rulesObj.append({'name': 'time', 'rule': ['span', {'class': 'date-time'}, 1]})
+
+        if 'thumb_count' in userParamObj["info"]["requiredContent"]:
+            rulesObj.append({'name': 'thumb_count', 'rule': ['div', {'class': 'article-end-collect'}, 0]})
+
+        if 'comment_count' in userParamObj["info"]["requiredContent"]:
+            rulesObj.append({'name': 'comment_count', 'rule': ['div', {'class': 'comment'}, 0]})
 
         return rulesObj
 

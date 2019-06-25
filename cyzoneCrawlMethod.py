@@ -6,7 +6,7 @@ class cyzoneCrawlMethod(baseCrawlMethod.crawlMethod):
     NAME = "cyzone"
     DESCRIPTION = "爬取创业邦"
     EXAMPLE_URL = "http://www.cyzone.cn/article/532494.html"
-    USING_SOUP = int("1")
+    USING = "Soup"
     REQUIREMENT = {
         "info": {
             "labels": ['author', 'tag', 'title',
@@ -55,7 +55,7 @@ class cyzoneCrawlMethod(baseCrawlMethod.crawlMethod):
     """
 
     @staticmethod
-    def generateSoupRules(userParamObj):
+    def generateRules(userParamObj):
         rulesObj = []
 
         if 'author' in userParamObj["info"]["requiredContent"]:

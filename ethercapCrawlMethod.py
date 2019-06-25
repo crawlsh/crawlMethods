@@ -7,7 +7,7 @@ class ethercapCrawlMethod(baseCrawlMethod.crawlMethod):
     EXAMPLE_URL = "https://www.ethercap.com/cases/view?id=302"
     IS_VIP_REQUIRED = False
     MAXIMUM = 200
-    USING_SOUP = True
+    USING = "Soup"
     REQUIREMENT = {
         "info": {
             "labels": ["title", "author", "content"],
@@ -34,7 +34,7 @@ class ethercapCrawlMethod(baseCrawlMethod.crawlMethod):
             return result
 
     @staticmethod
-    def generateSoupRules(userParamObj):
+    def generateRules(userParamObj):
         rulesObj = []
         if 'title' in userParamObj["info"]["requiredContent"]:
             rulesObj.append({'name': 'title', 'rule': ['h1', {}, 0]})

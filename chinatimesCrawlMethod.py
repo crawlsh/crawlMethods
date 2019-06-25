@@ -8,7 +8,7 @@ class chinatimesCrawlMethod(baseCrawlMethod.crawlMethod):
     NAME = "pedata"
     DESCRIPTION = "爬取华夏时报网"
     EXAMPLE_URL = "http://www.chinatimes.net.cn/article/87450.html"
-    USING_SOUP = int("1")
+    USING = "Soup"
     REQUIREMENT = {
         "info": {
             "labels": ['author', 'time', 'title', 'summary', 'article', 'thumb_count'],  # Implement here!
@@ -56,7 +56,7 @@ class chinatimesCrawlMethod(baseCrawlMethod.crawlMethod):
     """
 
     @staticmethod
-    def generateSoupRules(userParamObj):
+    def generateRules(userParamObj):
         rulesObj = []
 
         if 'author' in userParamObj["info"]["requiredContent"]:

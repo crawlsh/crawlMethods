@@ -8,7 +8,7 @@ class tmtCrawlMethod(baseCrawlMethod.crawlMethod):
     NAME = "tmt"
     DESCRIPTION = "爬取钛媒体"
     EXAMPLE_URL = "https://www.tmtpost.com/4011711.html"
-    USING_SOUP = int("1")
+    USING = "Soup"
     REQUIREMENT = {
         "info": {
             "labels": ['author', 'tag', 'time', 'title', 'summary',
@@ -65,7 +65,7 @@ class tmtCrawlMethod(baseCrawlMethod.crawlMethod):
     """
 
     @staticmethod
-    def generateSoupRules(userParamObj):
+    def generateRules(userParamObj):
         rulesObj = []
 
         if 'author' in userParamObj["info"]["requiredContent"]:

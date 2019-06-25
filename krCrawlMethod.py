@@ -6,7 +6,7 @@ class krCrawlMethod(baseCrawlMethod.crawlMethod):
     NAME = "36Kr"
     DESCRIPTION = "Crawl content of 36kr"
     EXAMPLE_URL = "https://36kr.com/p/5205828"
-    USING_SOUP = int("1")
+    USING = "Soup"
     REQUIREMENT = {
         "info": {
             "labels": ['author', 'author_description', 'author_article_count', 'summary',
@@ -69,7 +69,7 @@ class krCrawlMethod(baseCrawlMethod.crawlMethod):
     """
 
     @staticmethod
-    def generateSoupRules(userParamObj):
+    def generateRules(userParamObj):
         rulesObj = []
         
         if 'author' in userParamObj["info"]["requiredContent"]:

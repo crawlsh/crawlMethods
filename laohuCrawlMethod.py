@@ -1,14 +1,15 @@
 # -*- coding:utf-8 -*-
 from crawlMethods import baseCrawlMethod
 from utils import crawlUtils
-import json
+import re
 
 
 class laohuCrawlMethod(baseCrawlMethod.crawlMethod):
     NAME = "laohu"
     DESCRIPTION = "爬取老虎财经网"
     EXAMPLE_URL = "http://www.laohucaijing.com/Www_detail/index/133977/"
-    USING_SOUP = int("1")
+    USING = "Soup"
+    GET_LINK_REGEX = re.compile("href=\"(.+?)\"")
     REQUIREMENT = {
         "info": {
             "labels": ['author', 'title', 'article', 'view_count', 'tag'],  # Implement here!
@@ -31,14 +32,26 @@ class laohuCrawlMethod(baseCrawlMethod.crawlMethod):
     """
 
     @staticmethod
+    def requestAPIForURL(amount):
+        amount = float(amount)
+        i = amount / 10
+        j = amount // 10
+        needPages = int(i) if i == j else int(i) + 1
+        result = []
+        for i in range(1, 1 + needPages):
+            APIURL = "http://www.laohucaijing.com/laohu_index1/ajax_news_list/?page=%s" % i
+            html = crawlUtils.requestJsonWithProxy(APIURL)["html"]
+            links = laohuCrawlMethod.GET_LINK_REGEX.findall(html.replace("\/", "/"))
+            for j in set(links):
+                if "author_detail" not in j:
+                    result.append("http://www.laohucaijing.com%s" % j)
+        return result
+
+    @staticmethod
     def generateLinks(userParamObj):
         urlTemplate = "http://www.laohucaijing.com/Www_detail/index/%s/"
         if userParamObj["crawlBy"] == "ORDER":
-            result = [
-                urlTemplate % i
-                for i in range(133977 - int(userParamObj["info"]["amount"]), 133977)
-            ]
-            return result
+            return laohuCrawlMethod.requestAPIForURL(int(userParamObj["info"]["amount"]))
         if userParamObj["crawlBy"] == "ID":
             result = [urlTemplate % i for i in range(
                 int(userParamObj["info"]["idRangeStart"]),
@@ -56,7 +69,7 @@ class laohuCrawlMethod(baseCrawlMethod.crawlMethod):
     """
 
     @staticmethod
-    def generateSoupRules(userParamObj):
+    def generateRules(userParamObj):
         rulesObj = []
 
         if 'author' in userParamObj["info"]["requiredContent"]:

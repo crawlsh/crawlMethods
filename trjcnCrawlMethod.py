@@ -6,7 +6,7 @@ class trjcnCrawlMethod(baseCrawlMethod.crawlMethod):
     NAME = "trjcn"
     DESCRIPTION = "爬取投资界"
     EXAMPLE_URL = "https://news.trjcn.com/detail_196568.html"
-    USING_SOUP = int("1")
+    USING = "Soup"
     REQUIREMENT = {
         "info": {
             "labels": ['author', 'tag', 'title',
@@ -55,7 +55,7 @@ class trjcnCrawlMethod(baseCrawlMethod.crawlMethod):
     """
 
     @staticmethod
-    def generateSoupRules(userParamObj):
+    def generateRules(userParamObj):
         rulesObj = []
 
         if 'author' in userParamObj["info"]["requiredContent"]:

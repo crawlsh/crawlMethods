@@ -8,7 +8,7 @@ class pedataCrawlMethod(baseCrawlMethod.crawlMethod):
     NAME = "pedata"
     DESCRIPTION = "爬取清科研究中心"
     EXAMPLE_URL = "https://news.pedata.cn/531113.html"
-    USING_SOUP = int("1")
+    USING = "Soup"
     REQUIREMENT = {
         "info": {
             "labels": ['author', 'time', 'title', 'summary', 'article'],  # Implement here!
@@ -56,7 +56,7 @@ class pedataCrawlMethod(baseCrawlMethod.crawlMethod):
     """
 
     @staticmethod
-    def generateSoupRules(userParamObj):
+    def generateRules(userParamObj):
         rulesObj = []
 
         if 'author' in userParamObj["info"]["requiredContent"]:

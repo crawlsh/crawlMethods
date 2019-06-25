@@ -18,7 +18,7 @@ class crawlMethod():
     MAXIMUM = 200
 
     # whether using soup to generate rules
-    USING_SOUP = True
+    USING = "SOUP"
 
     """
         Example Requirement Param:
@@ -65,12 +65,8 @@ class crawlMethod():
         return
 
     @staticmethod
-    def generateSoupRules(userParamObj):
+    def generateRules(userParamObj):
         return userParamObj["info"]["requiredContent"]
-
-    @staticmethod
-    def generateRegexRules(params):
-        return
 
     @staticmethod
     def replaceHTML(html):

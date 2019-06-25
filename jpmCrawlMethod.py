@@ -6,7 +6,7 @@ class jpmCrawlMethod(baseCrawlMethod.crawlMethod):
     NAME = "jpm"
     DESCRIPTION = "爬取金评媒"
     EXAMPLE_URL = "http://www.jpm.cn/article-76489-1.html"
-    USING_SOUP = int("1")
+    USING = "Soup"
     REQUIREMENT = {
         "info": {
             "labels": ['title', 'summary',
@@ -55,7 +55,7 @@ class jpmCrawlMethod(baseCrawlMethod.crawlMethod):
     """
 
     @staticmethod
-    def generateSoupRules(userParamObj):
+    def generateRules(userParamObj):
         rulesObj = []
 
         if 'title' in userParamObj["info"]["requiredContent"]:
