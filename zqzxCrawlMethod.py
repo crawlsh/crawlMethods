@@ -68,10 +68,10 @@ class zqzxCrawlMethod(baseCrawlMethod.crawlMethod):
         rulesObj = []
 
         if 'author' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'author', 'rule': ['span', {'class': 'source_baidu'}, 0]})
+            rulesObj.append({'name': 'author', 'rule': ['span', {'id': 'source_baidu'}, 0]})
 
         if 'time' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'tag', 'rule': ['span', {'class': 'pubtime_baidu'}, 0]})
+            rulesObj.append({'name': 'tag', 'rule': ['span', {'id': 'pubtime_baidu'}, 0]})
 
         if 'title' in userParamObj["info"]["requiredContent"]:
             rulesObj.append({'name': 'title', 'rule': ['h1', {}, 0]})

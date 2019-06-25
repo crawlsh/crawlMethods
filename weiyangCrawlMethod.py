@@ -9,6 +9,7 @@ class weiyangCrawlMethod(baseCrawlMethod.crawlMethod):
     DESCRIPTION = "爬取未央网"
     EXAMPLE_URL = "https://www.weiyangx.com/332784.html"
     USING = "Soup"
+    REGEX_FINDING_NONCE = re.compile("nonce: \'(.+?)\'")
     REQUIREMENT = {
         "info": {
             "labels": ['author', 'time', 'title', 'tag', 'article'],  # Implement here!
@@ -30,14 +31,30 @@ class weiyangCrawlMethod(baseCrawlMethod.crawlMethod):
     """
 
     @staticmethod
+    def requestAPIForURL(amount):
+        amount = float(amount)
+        i = amount / 7
+        j = amount // 7
+        needPages = int(i) if i == j else int(i) + 1
+        result = []
+        homePage = crawlUtils.requestWithProxy("https://www.weiyangx.com")[0]
+        nonce = weiyangCrawlMethod.REGEX_FINDING_NONCE.findall(homePage)[0]
+        for i in range(1, 1 + needPages):
+            APIURL = "https://www.weiyangx.com/wp-admin/admin-ajax.php"
+            jsonData = crawlUtils.requestJsonWithProxy(APIURL, needCut=True,
+                                                       method="post",
+                                                       payload={"action": "home_load_more_news",
+                                                                "postOffset": i * 8, "tagId": 0,
+                                                                "_ajax_nonce": nonce})
+            print jsonData
+            result += [x["url"] for x in jsonData["data"]]
+        return result
+
+    @staticmethod
     def generateLinks(userParamObj):
         urlTemplate = "https://www.weiyangx.com/%s.html"
         if userParamObj["crawlBy"] == "ORDER":
-            result = [
-                urlTemplate % i
-                for i in range(332784 - int(userParamObj["info"]["amount"]), 332784)
-            ]
-            return result
+            return weiyangCrawlMethod.requestAPIForURL(int(userParamObj["info"]["amount"]))
         if userParamObj["crawlBy"] == "ID":
             result = [urlTemplate % i for i in range(
                 int(userParamObj["info"]["idRangeStart"]),
