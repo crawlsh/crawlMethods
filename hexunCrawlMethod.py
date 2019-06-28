@@ -1,23 +1,24 @@
 # -*- coding:utf-8 -*-
 from crawlMethods import baseCrawlMethod
 from utils import crawlUtils
-import json
+import re
 
 
-class chinaipoCrawlMethod(baseCrawlMethod.crawlMethod):
-    NAME = "chinaipo"
-    DESCRIPTION = "爬取China IPO"
-    EXAMPLE_URL = "http://m.chinaipo.com/vc/83640.html"
-    USING = "Json"
+class hexunCrawlMethod(baseCrawlMethod.crawlMethod):
+    NAME = "hexun"
+    DESCRIPTION = "爬取合讯创投网"
+    EXAMPLE_URL = "http://pe.hexun.com/2019-06-24/197618574.html"
+    USING = "Soup"
+    REGEX_FINDING_LINKS = re.compile("class=\"newtit\" id=\"h(.+?)\" href=\"" +
+                                     "http://pe\.hexun\.com/(.+?)/([0-9].+?)\.html\" target=\"_blank\">")
     REQUIREMENT = {
         "info": {
-            "labels": ['author', 'title', 'article', 'tag', 'time'],  # Implement here!
+            "labels": ['author', 'time', 'title', 'article'],  # Implement here!
             "isCrawlByIDAvailable": True,  # Implement here!
             "isCrawlByTimeAvailable": True,  # Implement here!
             "isCrawlByOrderAvailable": True,  # Implement here!
         }
     }
-
     """
     This function should generate all links user want to crawl
     
@@ -32,26 +33,14 @@ class chinaipoCrawlMethod(baseCrawlMethod.crawlMethod):
 
     @staticmethod
     def requestAPIForURL(amount):
-        amount = float(amount)
-        i = amount / 10
-        j = amount // 10
-        needPages = int(i) if i == j else int(i) + 1
-        result = []
-        for i in range(1, 1 + needPages):
-            try:
-                APIURL = "http://api.chinaipo.com/zh-hans/api/articles/?page=%s" % i
-                jsonData = crawlUtils.requestJsonWithProxy(APIURL)
-                for j in jsonData["results"]:
-                    originalId = j["originalId"]
-                    result.append("http://api.chinaipo.com/zh-hans/api/article/?originalId=%s" % originalId)
-            except:
-                pass
-        return result
+        homePage = crawlUtils.requestWithProxy("http://pe.hexun.com")[0]
+        links = hexunCrawlMethod.REGEX_FINDING_LINKS.findall(homePage)[0]
+        return ["http://pe.hexun.com/%s/%s.html" % (x[1], x[2]) for x in links[:amount]]
 
     @staticmethod
     def generateLinks(userParamObj):
         if userParamObj["crawlBy"] == "ORDER":
-            return chinaipoCrawlMethod.requestAPIForURL(int(userParamObj["info"]["amount"]))
+            return hexunCrawlMethod.requestAPIForURL(int(userParamObj["info"]["amount"]))
         return
 
     """
@@ -68,19 +57,16 @@ class chinaipoCrawlMethod(baseCrawlMethod.crawlMethod):
         rulesObj = []
 
         if 'author' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'author', 'rule': ["results", 0, "source"]})
-
-        if 'tag' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'tag', 'rule': ["results", 0, "tags"]})
-
-        if 'title' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'title', 'rule': ["results", 0, "title"]})
-
-        if 'article' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'article', 'rule': ["results", 0, "content", "content"]})
+            rulesObj.append({'name': 'author', 'rule': ['a', {'rel': 'nofollow'}, 0]})
 
         if 'time' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'time', 'rule': ["results", 0, "publishing_date"]})
+            rulesObj.append({'name': 'time', 'rule': ['span', {'class': 'pr20'}, 0]})
+
+        if 'title' in userParamObj["info"]["requiredContent"]:
+            rulesObj.append({'name': 'title', 'rule': ['h1', {}, 0]})
+
+        if 'article' in userParamObj["info"]["requiredContent"]:
+            rulesObj.append({'name': 'article', 'rule': ['div', {"class": "art_contextBox"}, 0]})
 
         return rulesObj
 

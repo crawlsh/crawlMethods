@@ -4,14 +4,14 @@ from utils import crawlUtils
 import json
 
 
-class chinaipoCrawlMethod(baseCrawlMethod.crawlMethod):
-    NAME = "chinaipo"
-    DESCRIPTION = "爬取China IPO"
-    EXAMPLE_URL = "http://m.chinaipo.com/vc/83640.html"
-    USING = "Json"
+class inewsweekCrawlMethod(baseCrawlMethod.crawlMethod):
+    NAME = "inewsweek"
+    DESCRIPTION = "爬取Inewsweek"
+    EXAMPLE_URL = "http://www.inewsweek.cn/society/2019-06-25/6151.shtml"
+    USING = "Soup"
     REQUIREMENT = {
         "info": {
-            "labels": ['author', 'title', 'article', 'tag', 'time'],  # Implement here!
+            "labels": ['author', 'title', 'article'],  # Implement here!
             "isCrawlByIDAvailable": True,  # Implement here!
             "isCrawlByTimeAvailable": True,  # Implement here!
             "isCrawlByOrderAvailable": True,  # Implement here!
@@ -33,17 +33,15 @@ class chinaipoCrawlMethod(baseCrawlMethod.crawlMethod):
     @staticmethod
     def requestAPIForURL(amount):
         amount = float(amount)
-        i = amount / 10
-        j = amount // 10
+        i = amount / 20
+        j = amount // 20
         needPages = int(i) if i == j else int(i) + 1
         result = []
         for i in range(1, 1 + needPages):
             try:
-                APIURL = "http://api.chinaipo.com/zh-hans/api/articles/?page=%s" % i
-                jsonData = crawlUtils.requestJsonWithProxy(APIURL)
-                for j in jsonData["results"]:
-                    originalId = j["originalId"]
-                    result.append("http://api.chinaipo.com/zh-hans/api/article/?originalId=%s" % originalId)
+                APIURL = "http://channel.inewsweek.chinanews.com/u/zk.shtml?pager=%s" % i
+                jsonData = crawlUtils.requestJsonWithProxy(APIURL, needCut=True)
+                result += [x["url"] for x in jsonData["docs"]]
             except:
                 pass
         return result
@@ -51,7 +49,7 @@ class chinaipoCrawlMethod(baseCrawlMethod.crawlMethod):
     @staticmethod
     def generateLinks(userParamObj):
         if userParamObj["crawlBy"] == "ORDER":
-            return chinaipoCrawlMethod.requestAPIForURL(int(userParamObj["info"]["amount"]))
+            return inewsweekCrawlMethod.requestAPIForURL(int(userParamObj["info"]["amount"]))
         return
 
     """
@@ -68,19 +66,13 @@ class chinaipoCrawlMethod(baseCrawlMethod.crawlMethod):
         rulesObj = []
 
         if 'author' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'author', 'rule': ["results", 0, "source"]})
-
-        if 'tag' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'tag', 'rule': ["results", 0, "tags"]})
+            rulesObj.append({'name': 'author', 'rule': ['div', {'class': 'editor'}, 0]})
 
         if 'title' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'title', 'rule': ["results", 0, "title"]})
+            rulesObj.append({'name': 'title', 'rule': ['h1', {}, 0]})
 
         if 'article' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'article', 'rule': ["results", 0, "content", "content"]})
-
-        if 'time' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'time', 'rule': ["results", 0, "publishing_date"]})
+            rulesObj.append({'name': 'article', 'rule': ['div', {'class': 'contenttxt'}, 0]})
 
         return rulesObj
 

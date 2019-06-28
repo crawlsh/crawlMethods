@@ -1,17 +1,18 @@
 # -*- coding:utf-8 -*-
 from crawlMethods import baseCrawlMethod
 from utils import crawlUtils
-import json
+import re
 
 
-class chinaipoCrawlMethod(baseCrawlMethod.crawlMethod):
-    NAME = "chinaipo"
-    DESCRIPTION = "爬取China IPO"
-    EXAMPLE_URL = "http://m.chinaipo.com/vc/83640.html"
-    USING = "Json"
+class eastmoneyCrawlMethod(baseCrawlMethod.crawlMethod):
+    NAME = "eastmoney"
+    DESCRIPTION = "爬取东方财务网"
+    EXAMPLE_URL = "http://finance.eastmoney.com/a/201906251160280558.html"
+    USING = "Soup"
+    GET_LINK_REGEX = re.compile("</span> <a target=\"_blank\" href=\"(.+?)\">")
     REQUIREMENT = {
         "info": {
-            "labels": ['author', 'title', 'article', 'tag', 'time'],  # Implement here!
+            "labels": ['author', 'title', 'time', 'summary', 'article'],  # Implement here!
             "isCrawlByIDAvailable": True,  # Implement here!
             "isCrawlByTimeAvailable": True,  # Implement here!
             "isCrawlByOrderAvailable": True,  # Implement here!
@@ -33,17 +34,16 @@ class chinaipoCrawlMethod(baseCrawlMethod.crawlMethod):
     @staticmethod
     def requestAPIForURL(amount):
         amount = float(amount)
-        i = amount / 10
-        j = amount // 10
+        i = amount / 20
+        j = amount // 20
         needPages = int(i) if i == j else int(i) + 1
         result = []
         for i in range(1, 1 + needPages):
             try:
-                APIURL = "http://api.chinaipo.com/zh-hans/api/articles/?page=%s" % i
-                jsonData = crawlUtils.requestJsonWithProxy(APIURL)
-                for j in jsonData["results"]:
-                    originalId = j["originalId"]
-                    result.append("http://api.chinaipo.com/zh-hans/api/article/?originalId=%s" % originalId)
+                APIURL = "http://finance.eastmoney.com/a/cywjh_%s.html" % i
+                html = crawlUtils.requestWithProxy(APIURL)[0]
+                links = eastmoneyCrawlMethod.GET_LINK_REGEX.findall(html)
+                result += links
             except:
                 pass
         return result
@@ -51,7 +51,7 @@ class chinaipoCrawlMethod(baseCrawlMethod.crawlMethod):
     @staticmethod
     def generateLinks(userParamObj):
         if userParamObj["crawlBy"] == "ORDER":
-            return chinaipoCrawlMethod.requestAPIForURL(int(userParamObj["info"]["amount"]))
+            return eastmoneyCrawlMethod.requestAPIForURL(int(userParamObj["info"]["amount"]))
         return
 
     """
@@ -68,19 +68,19 @@ class chinaipoCrawlMethod(baseCrawlMethod.crawlMethod):
         rulesObj = []
 
         if 'author' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'author', 'rule': ["results", 0, "source"]})
-
-        if 'tag' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'tag', 'rule': ["results", 0, "tags"]})
-
-        if 'title' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'title', 'rule': ["results", 0, "title"]})
-
-        if 'article' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'article', 'rule': ["results", 0, "content", "content"]})
+            rulesObj.append({'name': 'author', 'rule': ['div', {'class': 'data-source'}, 0]})
 
         if 'time' in userParamObj["info"]["requiredContent"]:
-            rulesObj.append({'name': 'time', 'rule': ["results", 0, "publishing_date"]})
+            rulesObj.append({'name': 'time', 'rule': ['div', {'class': 'time'}, 0]})
+
+        if 'summary' in userParamObj["info"]["requiredContent"]:
+            rulesObj.append({'name': 'summary', 'rule': ['div', {'class': 'b-review'}, 0]})
+
+        if 'title' in userParamObj["info"]["requiredContent"]:
+            rulesObj.append({'name': 'title', 'rule': ['h1', {}, 0]})
+
+        if 'article' in userParamObj["info"]["requiredContent"]:
+            rulesObj.append({'name': 'article', 'rule': ['div', {'id': 'ContentBody'}, 0]})
 
         return rulesObj
 
