@@ -28,8 +28,8 @@ class ethercapCrawlMethod(baseCrawlMethod.crawlMethod):
             return result
         if userParamObj["crawlBy"] == "ID":
             result = [urlTemplate % i for i in range(
-                    int(userParamObj["info"]["idRangeStart"]),
-                    int(userParamObj["info"]["idRangeEnd"]))
+                    321 - int(userParamObj["info"]["idRangeEnd"]),
+                    321 - int(userParamObj["info"]["idRangeStart"]))
             ]
             return result
 

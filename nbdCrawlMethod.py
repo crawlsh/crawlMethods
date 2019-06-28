@@ -14,8 +14,8 @@ class nbdCrawlMethod(baseCrawlMethod.crawlMethod):
     REQUIREMENT = {
         "info": {
             "labels": ['author', 'title', 'time', 'tag', 'article'],  # Implement here!
-            "isCrawlByIDAvailable": True,  # Implement here!
-            "isCrawlByTimeAvailable": True,  # Implement here!
+            "isCrawlByIDAvailable": False,  # Implement here!
+            "isCrawlByTimeAvailable": False,  # Implement here!
             "isCrawlByOrderAvailable": True,  # Implement here!
         }
     }
@@ -47,7 +47,7 @@ class nbdCrawlMethod(baseCrawlMethod.crawlMethod):
                 APIHTML = crawlUtils.crawlWorker(url, "Anon", 0)[0]
                 links = ["http://www.nbd.com.cn/articles/%s.html" % x
                          for x in nbdCrawlMethod.EXTRACT_LINKS_REGEX.findall(APIHTML)]
-                lastArticleID = nbdCrawlMethod.GET_LA_REGEX.findall(result)[0]
+                lastArticleID = nbdCrawlMethod.GET_LA_REGEX.findall(APIHTML)[0]
                 result += links
             except:
                 pass

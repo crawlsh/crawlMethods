@@ -13,8 +13,8 @@ class ikcCrawlMethod(baseCrawlMethod.crawlMethod):
         "info": {
             "labels": ['tag', 'title', 'author',
                        'article'],  # Implement here!
-            "isCrawlByIDAvailable": True,  # Implement here!
-            "isCrawlByTimeAvailable": True,  # Implement here!
+            "isCrawlByIDAvailable": False,  # Implement here!
+            "isCrawlByTimeAvailable": False,  # Implement here!
             "isCrawlByOrderAvailable": True,  # Implement here!
         }
     }

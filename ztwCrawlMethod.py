@@ -13,7 +13,7 @@ class ztwCrawlMethod(baseCrawlMethod.crawlMethod):
         "info": {
             "labels": ['author', 'title', 'article'],  # Implement here!
             "isCrawlByIDAvailable": True,  # Implement here!
-            "isCrawlByTimeAvailable": True,  # Implement here!
+            "isCrawlByTimeAvailable": False,  # Implement here!
             "isCrawlByOrderAvailable": True,  # Implement here!
         }
     }
@@ -41,8 +41,8 @@ class ztwCrawlMethod(baseCrawlMethod.crawlMethod):
             return result
         if userParamObj["crawlBy"] == "ID":
             result = [urlTemplate % i for i in range(
-                int(userParamObj["info"]["idRangeStart"]),
-                int(userParamObj["info"]["idRangeEnd"]))
+                63550 - int(userParamObj["info"]["idRangeEnd"]),
+                63550 - int(userParamObj["info"]["idRangeStart"]))
                       ]
             return result
 

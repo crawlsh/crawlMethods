@@ -54,8 +54,8 @@ class krCrawlMethod(baseCrawlMethod.crawlMethod):
             return result
         if userParamObj["crawlBy"] == "ID":
             result = [urlTemplate % i for i in range(
-                    int(userParamObj["info"]["idRangeStart"]),
-                    int(userParamObj["info"]["idRangeEnd"]))
+                    5205828 - int(userParamObj["info"]["idRangeEnd"]),
+                    5205828 - int(userParamObj["info"]["idRangeStart"]))
             ]
             return result
 

@@ -11,6 +11,7 @@ class newseedCrawlMethod(baseCrawlMethod.crawlMethod):
         "info": {
             "labels": ['author', 'title', 'summary',
                        'article', 'time'],  # Implement here!
+            "isCrawlByTimeAvailable": False,  # Implement here!
             "isCrawlByIDAvailable": True,  # Implement here!
             "isCrawlByOrderAvailable": True,  # Implement here!
         }
@@ -38,8 +39,8 @@ class newseedCrawlMethod(baseCrawlMethod.crawlMethod):
             return result
         if userParamObj["crawlBy"] == "ID":
             result = [urlTemplate % i for i in range(
-                    int(userParamObj["info"]["idRangeStart"]),
-                    int(userParamObj["info"]["idRangeEnd"]))
+                    1354890 - int(userParamObj["info"]["idRangeEnd"]),
+                    1354890 - int(userParamObj["info"]["idRangeStart"]))
             ]
             return result
         return

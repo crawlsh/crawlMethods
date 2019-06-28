@@ -13,8 +13,8 @@ class eastmoneyCrawlMethod(baseCrawlMethod.crawlMethod):
     REQUIREMENT = {
         "info": {
             "labels": ['author', 'title', 'time', 'summary', 'article'],  # Implement here!
-            "isCrawlByIDAvailable": True,  # Implement here!
-            "isCrawlByTimeAvailable": True,  # Implement here!
+            "isCrawlByIDAvailable": False,  # Implement here!
+            "isCrawlByTimeAvailable": False,  # Implement here!
             "isCrawlByOrderAvailable": True,  # Implement here!
         }
     }

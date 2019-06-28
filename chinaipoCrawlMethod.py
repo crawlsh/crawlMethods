@@ -12,8 +12,8 @@ class chinaipoCrawlMethod(baseCrawlMethod.crawlMethod):
     REQUIREMENT = {
         "info": {
             "labels": ['author', 'title', 'article', 'tag', 'time'],  # Implement here!
-            "isCrawlByIDAvailable": True,  # Implement here!
-            "isCrawlByTimeAvailable": True,  # Implement here!
+            "isCrawlByIDAvailable": False,  # Implement here!
+            "isCrawlByTimeAvailable": False,  # Implement here!
             "isCrawlByOrderAvailable": True,  # Implement here!
         }
     }

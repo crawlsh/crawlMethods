@@ -12,7 +12,7 @@ class geekparkCrawlMethod(baseCrawlMethod.crawlMethod):
             "labels": ['author', 'tag', 'title',
                        'article', 'time', 'thumb_count'],  # Implement here!
             "isCrawlByIDAvailable": True,  # Implement here!
-            "isCrawlByTimeAvailable": True,  # Implement here!
+            "isCrawlByTimeAvailable": False,  # Implement here!
             "isCrawlByOrderAvailable": True,  # Implement here!
         }
     }
@@ -39,8 +39,8 @@ class geekparkCrawlMethod(baseCrawlMethod.crawlMethod):
             return result
         if userParamObj["crawlBy"] == "ID":
             result = [urlTemplate % i for i in range(
-                int(userParamObj["info"]["idRangeStart"]),
-                int(userParamObj["info"]["idRangeEnd"]))
+                243272 - int(userParamObj["info"]["idRangeEnd"]),
+                243272 - int(userParamObj["info"]["idRangeStart"]))
                       ]
             return result
         return

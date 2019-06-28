@@ -14,7 +14,7 @@ class weiyangCrawlMethod(baseCrawlMethod.crawlMethod):
         "info": {
             "labels": ['author', 'time', 'title', 'tag', 'article'],  # Implement here!
             "isCrawlByIDAvailable": True,  # Implement here!
-            "isCrawlByTimeAvailable": True,  # Implement here!
+            "isCrawlByTimeAvailable": False,  # Implement here!
             "isCrawlByOrderAvailable": True,  # Implement here!
         }
     }
@@ -46,7 +46,6 @@ class weiyangCrawlMethod(baseCrawlMethod.crawlMethod):
                                                        payload={"action": "home_load_more_news",
                                                                 "postOffset": i * 8, "tagId": 0,
                                                                 "_ajax_nonce": nonce})
-            print jsonData
             result += [x["url"] for x in jsonData["data"]]
         return result
 

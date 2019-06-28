@@ -13,8 +13,8 @@ class tmtCrawlMethod(baseCrawlMethod.crawlMethod):
         "info": {
             "labels": ['author', 'tag', 'time', 'title', 'summary',
                        'article', 'thumb_count', 'comments'],  # Implement here!
-            "isCrawlByIDAvailable": True,  # Implement here!
-            "isCrawlByTimeAvailable": True,  # Implement here!
+            "isCrawlByIDAvailable": False,  # Implement here!
+            "isCrawlByTimeAvailable": False,  # Implement here!
             "isCrawlByOrderAvailable": True,  # Implement here!
         }
     }

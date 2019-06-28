@@ -12,8 +12,8 @@ class eeoCrawlMethod(baseCrawlMethod.crawlMethod):
     REQUIREMENT = {
         "info": {
             "labels": ['author', 'title', 'article'],  # Implement here!
-            "isCrawlByIDAvailable": True,  # Implement here!
-            "isCrawlByTimeAvailable": True,  # Implement here!
+            "isCrawlByIDAvailable": False,  # Implement here!
+            "isCrawlByTimeAvailable": False,  # Implement here!
             "isCrawlByOrderAvailable": True,  # Implement here!
         }
     }

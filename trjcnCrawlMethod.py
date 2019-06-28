@@ -12,7 +12,7 @@ class trjcnCrawlMethod(baseCrawlMethod.crawlMethod):
             "labels": ['author', 'tag', 'title',
                        'article', 'time', 'thumb_count', 'comments'],  # Implement here!
             "isCrawlByIDAvailable": True,  # Implement here!
-            "isCrawlByTimeAvailable": True,  # Implement here!
+            "isCrawlByTimeAvailable": False,  # Implement here!
             "isCrawlByOrderAvailable": True,  # Implement here!
         }
     }
@@ -39,8 +39,8 @@ class trjcnCrawlMethod(baseCrawlMethod.crawlMethod):
             return result
         if userParamObj["crawlBy"] == "ID":
             result = [urlTemplate % i for i in range(
-                int(userParamObj["info"]["idRangeStart"]),
-                int(userParamObj["info"]["idRangeEnd"]))
+                196568 - int(userParamObj["info"]["idRangeEnd"]),
+                196568 - int(userParamObj["info"]["idRangeStart"]))
                       ]
             return result
         return

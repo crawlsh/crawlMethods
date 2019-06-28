@@ -12,7 +12,7 @@ class cttCrawlMethod(baseCrawlMethod.crawlMethod):
             "labels": ['author', 'tag', 'title', 'summary',
                        'article'],  # Implement here!
             "isCrawlByIDAvailable": True,  # Implement here!
-            "isCrawlByTimeAvailable": True,  # Implement here!
+            "isCrawlByTimeAvailable": False,  # Implement here!
             "isCrawlByOrderAvailable": True,  # Implement here!
         }
     }
@@ -39,8 +39,8 @@ class cttCrawlMethod(baseCrawlMethod.crawlMethod):
             return result
         if userParamObj["crawlBy"] == "ID":
             result = [urlTemplate % i for i in range(
-                int(userParamObj["info"]["idRangeStart"]),
-                int(userParamObj["info"]["idRangeEnd"]))
+                196568 - int(userParamObj["info"]["idRangeEnd"]),
+                196568 - int(userParamObj["info"]["idRangeStart"]))
                       ]
             return result
         return

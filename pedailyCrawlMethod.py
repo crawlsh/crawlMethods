@@ -13,7 +13,7 @@ class pedailyCrawlMethod(baseCrawlMethod.crawlMethod):
         "info": {
             "labels": ['author', 'time', 'title', 'summary', 'article', 'tag'],  # Implement here!
             "isCrawlByIDAvailable": True,  # Implement here!
-            "isCrawlByTimeAvailable": True,  # Implement here!
+            "isCrawlByTimeAvailable": False,  # Implement here!
             "isCrawlByOrderAvailable": True,  # Implement here!
         }
     }
@@ -40,8 +40,8 @@ class pedailyCrawlMethod(baseCrawlMethod.crawlMethod):
             return result
         if userParamObj["crawlBy"] == "ID":
             result = [urlTemplate % i for i in range(
-                int(userParamObj["info"]["idRangeStart"]),
-                int(userParamObj["info"]["idRangeEnd"]))
+                444086 - int(userParamObj["info"]["idRangeEnd"]),
+                444086 - int(userParamObj["info"]["idRangeStart"]))
                       ]
             return result
         return
