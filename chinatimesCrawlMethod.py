@@ -9,6 +9,7 @@ class chinatimesCrawlMethod(baseCrawlMethod.crawlMethod):
     DESCRIPTION = "爬取华夏时报网"
     EXAMPLE_URL = "http://www.chinatimes.net.cn/article/87450.html"
     USING = "Soup"
+    EXTRACT_LATEST_RE = re.compile("<a href=\"http://www\.chinatimes\.net\.cn/article/(.+?)\.html\" target=\"_blank\">")
     REQUIREMENT = {
         "info": {
             "labels": ['author', 'time', 'title', 'summary', 'article', 'thumb_count'],  # Implement here!
@@ -17,43 +18,29 @@ class chinatimesCrawlMethod(baseCrawlMethod.crawlMethod):
             "isCrawlByOrderAvailable": True,  # Implement here!
         }
     }
-    """
-    This function should generate all links user want to crawl
-    
-    For example, if user want to crawl 20 articles randomly, 
-    this function should generate links of these articles
-    
-    If you need to crawl any page, use utils.crawlUtils.crawlWorker(url), 
-    for more info, see https://docs.crawl.sh/
-    
-    return in an array please 😊
-    """
+
+    @staticmethod
+    def getLastestPostID():
+        html = crawlUtils.crawlWorker("http://www.chinatimes.net.cn/", "Anon", 0)['raw']
+        return int(chinatimesCrawlMethod.EXTRACT_LATEST_RE.findall(html)[0])
 
     @staticmethod
     def generateLinks(userParamObj):
         urlTemplate = "http://www.chinatimes.net.cn/article/%s.html"
+        latestID = chinatimesCrawlMethod.getLastestPostID()
         if userParamObj["crawlBy"] == "ORDER":
             result = [
                 urlTemplate % i
-                for i in range(87450 - int(userParamObj["info"]["amount"]), 87450)
+                for i in range(latestID - int(userParamObj["info"]["amount"]), latestID)
             ]
             return result
         if userParamObj["crawlBy"] == "ID":
             result = [urlTemplate % i for i in range(
-                87450 - int(userParamObj["info"]["idRangeEnd"]),
-                87450 - int(userParamObj["info"]["idRangeStart"]))
-                      ]
+                latestID - int(userParamObj["info"]["idRangeEnd"]),
+                latestID - int(userParamObj["info"]["idRangeStart"]))
+            ]
             return result
         return
-
-    """
-    This function should generate rules
-
-    For example, if user want to crawl title of the articles, 
-    this function should generate regex/soup rules of title
-
-    return in an array please 😊
-    """
 
     @staticmethod
     def generateRules(userParamObj):
@@ -78,16 +65,6 @@ class chinatimesCrawlMethod(baseCrawlMethod.crawlMethod):
             rulesObj.append({'name': 'thumb_count', 'rule': ['b', {'id': 'praise_count'}, 0]})
 
         return rulesObj
-
-    """
-    [Optional]
-    You can ignore this if everything works fine with foregoing functions
-    
-    This function can modify the html before it is analyzed by rules.
-    
-    For example, if you want to match the title of article but you replaced the title with empty string,
-    the result would also be empty.
-    """
 
     @staticmethod
     def replaceSoup(soup):

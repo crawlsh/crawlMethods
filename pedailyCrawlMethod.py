@@ -8,6 +8,7 @@ class pedailyCrawlMethod(baseCrawlMethod.crawlMethod):
     NAME = "pedaily"
     DESCRIPTION = "爬取投资界网"
     EXAMPLE_URL = "https://m.pedaily.cn/news/444086"
+    EXTRACT_LATEST_RE = re.compile("<a target=\"_self\" href=\"https://m\.pedaily\.cn/news/(.+?)\">")
     USING = "Soup"
     REQUIREMENT = {
         "info": {
@@ -17,31 +18,26 @@ class pedailyCrawlMethod(baseCrawlMethod.crawlMethod):
             "isCrawlByOrderAvailable": True,  # Implement here!
         }
     }
-    """
-    This function should generate all links user want to crawl
-    
-    For example, if user want to crawl 20 articles randomly, 
-    this function should generate links of these articles
-    
-    If you need to crawl any page, use utils.crawlUtils.crawlWorker(url), 
-    for more info, see https://docs.crawl.sh/
-    
-    return in an array please 😊
-    """
+
+    @staticmethod
+    def getLastestPostID():
+        html = crawlUtils.crawlWorker("https://m.pedaily.cn/", "Anon", 0)['raw']
+        return int(pedailyCrawlMethod.EXTRACT_LATEST_RE.findall(html)[1])
 
     @staticmethod
     def generateLinks(userParamObj):
         urlTemplate = "https://m.pedaily.cn/news/%s"
+        latestID = pedailyCrawlMethod.getLastestPostID()
         if userParamObj["crawlBy"] == "ORDER":
             result = [
                 urlTemplate % i
-                for i in range(444086 - int(userParamObj["info"]["amount"]), 444086)
+                for i in range(latestID - int(userParamObj["info"]["amount"]), latestID)
             ]
             return result
         if userParamObj["crawlBy"] == "ID":
             result = [urlTemplate % i for i in range(
-                444086 - int(userParamObj["info"]["idRangeEnd"]),
-                444086 - int(userParamObj["info"]["idRangeStart"]))
+                latestID - int(userParamObj["info"]["idRangeEnd"]),
+                latestID - int(userParamObj["info"]["idRangeStart"]))
                       ]
             return result
         return

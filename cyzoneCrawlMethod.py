@@ -1,5 +1,7 @@
 # -*- coding:utf-8 -*-
 from crawlMethods import baseCrawlMethod
+from utils import crawlUtils
+import re
 
 
 class cyzoneCrawlMethod(baseCrawlMethod.crawlMethod):
@@ -7,6 +9,7 @@ class cyzoneCrawlMethod(baseCrawlMethod.crawlMethod):
     DESCRIPTION = "爬取创业邦"
     EXAMPLE_URL = "http://www.cyzone.cn/article/532494.html"
     USING = "Soup"
+    EXTRACT_LATEST_RE = re.compile("//www\.cyzone\.cn/article/(.+?)\.html\" class=\"item-title\"")
     REQUIREMENT = {
         "info": {
             "labels": ['author', 'tag', 'title',
@@ -16,43 +19,29 @@ class cyzoneCrawlMethod(baseCrawlMethod.crawlMethod):
             "isCrawlByOrderAvailable": True,  # Implement here!
         }
     }
-    """
-    This function should generate all links user want to crawl
-    
-    For example, if user want to crawl 20 articles randomly, 
-    this function should generate links of these articles
-    
-    If you need to crawl any page, use utils.crawlUtils.crawlWorker(url), 
-    for more info, see https://docs.crawl.sh/
-    
-    return in an array please 😊
-    """
+
+    @staticmethod
+    def getLastestPostID():
+        html = crawlUtils.crawlWorker("http://www.cyzone.cn/content/index/init?tpl=index_page&page=1", "Anon", 0)['raw']
+        return int(cyzoneCrawlMethod.EXTRACT_LATEST_RE.findall(html)[0])
 
     @staticmethod
     def generateLinks(userParamObj):
+        latestID = cyzoneCrawlMethod.getLastestPostID()
         urlTemplate = "http://www.cyzone.cn/article/%s.html"
         if userParamObj["crawlBy"] == "ORDER":
             result = [
                 urlTemplate % i
-                for i in range(532494 - int(userParamObj["info"]["amount"]), 532494)
+                for i in range(latestID - int(userParamObj["info"]["amount"]), latestID)
             ]
             return result
         if userParamObj["crawlBy"] == "ID":
             result = [urlTemplate % i for i in range(
-                532494 - int(userParamObj["info"]["idRangeEnd"]),
-                532494 - int(userParamObj["info"]["idRangeStart"]))
+                latestID - int(userParamObj["info"]["idRangeEnd"]),
+                latestID - int(userParamObj["info"]["idRangeStart"]))
                       ]
             return result
         return
-
-    """
-    This function should generate rules
-
-    For example, if user want to crawl title of the articles, 
-    this function should generate regex/soup rules of title
-
-    return in an array please 😊
-    """
 
     @staticmethod
     def generateRules(userParamObj):
@@ -79,16 +68,6 @@ class cyzoneCrawlMethod(baseCrawlMethod.crawlMethod):
         if 'comment_count' in userParamObj["info"]["requiredContent"]:
             rulesObj.append({'name': 'comment_count', 'rule': ['div', {'class': 'comment'}, 0]})
         return rulesObj
-
-    """
-    [Optional]
-    You can ignore this if everything works fine with foregoing functions
-    
-    This function can modify the html before it is analyzed by rules.
-    
-    For example, if you want to match the title of article but you replaced the title with empty string,
-    the result would also be empty.
-    """
 
     @staticmethod
     def replaceSoup(soup):

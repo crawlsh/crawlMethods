@@ -19,18 +19,6 @@ class ikcCrawlMethod(baseCrawlMethod.crawlMethod):
         }
     }
 
-    """
-    This function should generate all links user want to crawl
-    
-    For example, if user want to crawl 20 articles randomly, 
-    this function should generate links of these articles
-    
-    If you need to crawl any page, use utils.crawlUtils.crawlWorker(url), 
-    for more info, see https://docs.crawl.sh/
-    
-    return in an array please 😊
-    """
-
     @staticmethod
     def requestAPIForURL(amount):
         APIURL = "http://app.ikanchai.com/roll.php?do=more&status=1&sort=0&pagesize=%s&page=0" % amount
@@ -43,15 +31,6 @@ class ikcCrawlMethod(baseCrawlMethod.crawlMethod):
         if userParamObj["crawlBy"] == "ORDER":
             return ikcCrawlMethod.requestAPIForURL(int(userParamObj["info"]["amount"]))
         return
-
-    """
-    This function should generate rules
-
-    For example, if user want to crawl title of the articles, 
-    this function should generate regex/soup rules of title
-
-    return in an array please 😊
-    """
 
     @staticmethod
     def generateRules(userParamObj):
@@ -70,16 +49,6 @@ class ikcCrawlMethod(baseCrawlMethod.crawlMethod):
             rulesObj.append({'name': 'article', 'rule': ['div', {'class': 'show_content'}, 0]})
 
         return rulesObj
-
-    """
-    [Optional]
-    You can ignore this if everything works fine with foregoing functions
-    
-    This function can modify the html before it is analyzed by rules.
-    
-    For example, if you want to match the title of article but you replaced the title with empty string,
-    the result would also be empty.
-    """
 
     @staticmethod
     def replaceSoup(soup):

@@ -1,11 +1,14 @@
 # -*- coding:utf-8 -*-
-import baseCrawlMethod
+from crawlMethods import baseCrawlMethod
+from utils import crawlUtils
+import re
 
 
 class krCrawlMethod(baseCrawlMethod.crawlMethod):
     NAME = "36Kr"
     DESCRIPTION = "Crawl content of 36kr"
     EXAMPLE_URL = "https://36kr.com/p/5205828"
+    EXTRACT_LATEST_RE = re.compile("url\":\"https://36kr\.com/p/(.+?)\"")
     USING = "Soup"
     REQUIREMENT = {
         "info": {
@@ -16,57 +19,28 @@ class krCrawlMethod(baseCrawlMethod.crawlMethod):
             "isCrawlByOrderAvailable": True,  # Implement here!
         }
     }
-    """
-    This function should generate all links user want to crawl
-    
-    For example, if user want to crawl 20 articles randomly, 
-    this function should generate links of these articles
-    
-    If you need to crawl any page, use utils.crawlUtils.crawlWorker(url), 
-    for more info, see https://docs.crawl.sh/
-    
-    return in an array please 😊
-    
-    An example:
-        urlTemplate = "https://36kr.com/p/%s"
-        if userParamObj["crawlBy"] == "ORDER":
-            result = [
-                urlTemplate % i
-                for i in range(5205828 - int(userParamObj["info"]["amount"]), 5205828)
-            ]
-            return result
-        if userParamObj["crawlBy"] == "ID":
-            result = [urlTemplate % i for i in range(
-                    int(userParamObj["info"]["idRangeStart"]),
-                    int(userParamObj["info"]["idRangeEnd"]))
-            ]
-            return result
-    """
+
+    @staticmethod
+    def getLastestPostID():
+        html = crawlUtils.crawlWorker("https://36kr.com/", "Anon", 0)['raw']
+        return int(krCrawlMethod.EXTRACT_LATEST_RE.findall(html)[0])
 
     @staticmethod
     def generateLinks(userParamObj):
         urlTemplate = "https://36kr.com/p/%s"
+        latestID = krCrawlMethod.getLastestPostID()
         if userParamObj["crawlBy"] == "ORDER":
             result = [
                 urlTemplate % i
-                for i in range(5205828 - int(userParamObj["info"]["amount"]), 5205828)
+                for i in range(latestID - int(userParamObj["info"]["amount"]), latestID)
             ]
             return result
         if userParamObj["crawlBy"] == "ID":
             result = [urlTemplate % i for i in range(
-                    5205828 - int(userParamObj["info"]["idRangeEnd"]),
-                    5205828 - int(userParamObj["info"]["idRangeStart"]))
+                    latestID - int(userParamObj["info"]["idRangeEnd"]),
+                    latestID - int(userParamObj["info"]["idRangeStart"]))
             ]
             return result
-
-    """
-    This function should generate rules
-    
-    For example, if user want to crawl title of the articles, 
-    this function should generate regex/soup rules of title
-    
-    return in an array please 😊
-    """
 
     @staticmethod
     def generateRules(userParamObj):
@@ -97,16 +71,6 @@ class krCrawlMethod(baseCrawlMethod.crawlMethod):
             rulesObj.append({'name': 'comments', 'rule': ['ul', {'class': 'comment-list'}, 0]})
 
         return rulesObj
-
-    """
-    [Optional]
-    You can ignore this if everything works fine with foregoing functions
-    
-    This function can modify the html before it is analyzed by rules.
-    
-    For example, if you want to match the title of article but you replaced the title with empty string,
-    the result would also be empty.
-    """
 
     @staticmethod
     def replaceSoup(soup):
